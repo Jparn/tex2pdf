@@ -1,0 +1,15 @@
+$cmd=$CmdLineRaw
+$n=StringInStr($cmd,"\",2,-1)
+$fold=StringLeft($cmd,$n)
+$tex=StringReplace($cmd,$fold,"")
+
+$pdf=StringReplace($tex,"tex","pdf",-1,2)
+WinKill("[CLASS:CASCADIA_HOSTING_WINDOW_CLASS]")
+$re=Run("pdflatex "&$fold&$tex)
+If @error Then Exit
+WinWaitActive("[CLASS:CASCADIA_HOSTING_WINDOW_CLASS]")
+WinWaitNotActive("[CLASS:CASCADIA_HOSTING_WINDOW_CLASS]")
+$re=Run("C:\Program Files\Mozilla Firefox\firefox.exe "&$fold&$pdf)
+$fold=StringReplace($fold,'"',"")
+FileDelete($fold & "*.aux"&'"')
+FileDelete($fold & "*.log"&'"')
